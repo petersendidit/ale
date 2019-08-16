@@ -39,11 +39,13 @@ endfunction
 
 function! ale#handlers#eslint#GetCommand(buffer) abort
     let l:executable = ale#handlers#eslint#GetExecutable(a:buffer)
+    let l:node_modules = ale#path#FindNearestDirectory(a:buffer, 'node_modules/')
 
     let l:options = ale#Var(a:buffer, 'javascript_eslint_options')
 
     return ale#node#Executable(a:buffer, l:executable)
     \   . (!empty(l:options) ? ' ' . l:options : '')
+    \   . (!empty(l:node_modules) ? ' --resolve-plugins-relative-to ' . ale#Escape(l:node_modules) : '')
     \   . ' -f json --stdin --stdin-filename %s'
 endfunction
 

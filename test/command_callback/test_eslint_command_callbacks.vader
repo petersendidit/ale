@@ -1,0 +1,15 @@
+Before:
+  call ale#assert#SetUpLinterTest('javascript', 'eslint')
+
+After:
+  call ale#assert#TearDownLinterTest()
+
+Execute(Should use the node_modules path to resolve plugins):
+  call ale#test#SetFilename('javascript_paths/project_with_eslint/test_file.js')
+
+  AssertLinter ale#path#Simplify(g:dir . '/javascript_paths/project_with_eslint/node_modules/.bin/eslint'),
+  \ ale#Escape(ale#path#Simplify(g:dir . '/javascript_paths/project_with_eslint/node_modules/.bin/eslint'))
+  \ . ' --resolve-plugins-relative-to '
+  \ . ale#Escape(ale#path#Simplify(g:dir . '/javascript_paths/project_with_eslint/node_modules/'))
+  \   . ' -f json --stdin --stdin-filename %s'
+
